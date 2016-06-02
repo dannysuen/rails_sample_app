@@ -3,13 +3,13 @@ Rails.application.routes.draw do
   get 'help'    => 'static_pages#help'
   get 'about'   => 'static_pages#about'
   get 'contact' => 'static_pages#contact'
-  get 'signup'  =>  'users#new'
+  get 'signup'  => 'users#new'
   resources :users
 
   #api
   namespace :api do
     namespace :v1 do
-      resources :users, only: [:show, :new, :create]
+      resources :users, only: [:show, :new, :create], defaults: { format: 'json' }
     end
   end
 

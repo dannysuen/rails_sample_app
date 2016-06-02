@@ -12,7 +12,6 @@ class Api::V1::UsersController < Api::V1::BaseController
 
   def create
     @user = User.new(user_params)
-    # debugger
     if @user.save
       # redirect_to 'localhost:3000/api/v1/users/show'
       @envelop = Hash.new
