@@ -21,7 +21,11 @@ class Api::V1::UsersController < Api::V1::BaseController
       @envelop[:pagination] = Hash.new
       @envelop[:pagination][:next_url] = nil
     else
-      render 'new'
+      @envelop = Hash.new
+      @envelop[:meta] = { :code => 400 }
+      @envelop[:data] = @user
+      @envelop[:pagination] = Hash.new
+      @envelop[:pagination][:next_url] = nil
     end
   end
 
