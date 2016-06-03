@@ -10,6 +10,10 @@ class Api::V1::UsersController < Api::V1::BaseController
     @envelop[:pagination][:next_url] = nil
   end
 
+  def index
+    @users = User.all
+  end
+
   def create
     @user = User.new(user_params)
     if @user.save
