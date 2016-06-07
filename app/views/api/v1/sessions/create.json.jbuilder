@@ -3,10 +3,10 @@ json.meta do
 end
 
 json.data do
-  json.(@envelop[:data], :id, :email, :name, :gravatar_url, :created_at, :updated_at)
+  json.(@user, :id, :email, :name, :gravatar_url)
+  json.token @user.authentication_token
 end
 
 json.pagination do
   json.(@envelop[:pagination], :next_url)
 end
-

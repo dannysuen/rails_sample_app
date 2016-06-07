@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   attr_accessor :remember_token
+  attr_accessor :gravatar_url
 
   before_save { self.email = email.downcase }
 
@@ -12,6 +13,8 @@ class User < ActiveRecord::Base
 
   has_secure_password
   validates :password, presence: true, length: { minimum: 6 }
+
+  before_create :generate_authentication_token
 
   def remember
     self.remember_token = User.new_token
@@ -37,4 +40,18 @@ class User < ActiveRecord::Base
   def forget
     update_attribute(:remember_digest, nil)
   end
+
+  # For use in API
+  def generate_authentication_token
+    loop do
+      self.authentication_token = SecureRandom.base64(64)
+      break unless User.find_by(authentication_token: authentication_token)
+    end
+  end
+
+  def reset_auth_token!
+    generate_authentication_token
+    save
+  end
+
 end
