@@ -15,7 +15,7 @@ class Api::V1::UsersController < Api::V1::BaseController
     @users = User.all
 
     @users.each do |user|
-      user.gravatar_url = gravatar_url_for(user)
+      user.gravatar_url = gravatar_url_for(user, size: 200)
     end
 
     @envelop = Hash.new
