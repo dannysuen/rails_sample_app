@@ -3,9 +3,7 @@ json.meta do
 end
 
 
-json.data do
-  json.(@envelop[:data], :id, :email, :name, :gravatar_url, :created_at, :updated_at)
-end
+json.data @users, :id, :name, :email, :gravatar_url
 
 json.pagination do
   json.(@envelop[:pagination], :next_url)
