@@ -47,6 +47,7 @@ class Api::V1::UsersController < Api::V1::BaseController
       @envelop[:meta] = { :code => 200 }
       @envelop[:data] = @user
       @user.gravatar_url = gravatar_url_for(@user)
+      render 'show'
     else
       @envelop = Hash.new
       @envelop[:meta] = {
@@ -54,9 +55,8 @@ class Api::V1::UsersController < Api::V1::BaseController
           :error_type => 'ParamsInvalidException',
           :error_message => @user.errors.full_messages.first
       }
+      render 'show', status: 400
     end
-
-    render 'show'
   end
 
   private
