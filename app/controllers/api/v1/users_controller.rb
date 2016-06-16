@@ -7,8 +7,6 @@ class Api::V1::UsersController < Api::V1::BaseController
     @envelop[:meta] = { :code => 200 }
     @envelop[:data] = @user
     @user.gravatar_url = gravatar_url_for(@user)
-    @envelop[:pagination] = Hash.new
-    @envelop[:pagination][:next_url] = nil
   end
 
   def index
@@ -33,16 +31,32 @@ class Api::V1::UsersController < Api::V1::BaseController
       @envelop[:meta] = { :code => 200 }
       @envelop[:data] = @user
       @user.gravatar_url = gravatar_url_for(@user)
-      @envelop[:pagination] = Hash.new
-      @envelop[:pagination][:next_url] = nil
     else
       @envelop = Hash.new
       @envelop[:meta] = { :code => 400 }
       @envelop[:data] = @user
       @user.gravatar_url = gravatar_url_for(@user)
-      @envelop[:pagination] = Hash.new
-      @envelop[:pagination][:next_url] = nil
     end
+  end
+
+  # update方法的错误处理做得很好，其它方法应该参照一下
+  def update
+    @user = User.find(params[:id])
+    if @user.update_attributes(user_params)
+      @envelop = Hash.new
+      @envelop[:meta] = { :code => 200 }
+      @envelop[:data] = @user
+      @user.gravatar_url = gravatar_url_for(@user)
+    else
+      @envelop = Hash.new
+      @envelop[:meta] = {
+          :code => 400,
+          :error_type => 'ParamsInvalidException',
+          :error_message => @user.errors.full_messages.first
+      }
+    end
+
+    render 'show'
   end
 
   private

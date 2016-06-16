@@ -17,6 +17,10 @@ else
   json.set! :data, nil
 end
 
-json.pagination do
-  json.(@envelop[:pagination], :next_url)
+if !@envelop[:pagination].nil?
+  json.pagination do
+    json.(@envelop[:pagination], :next_url)
+  end
+else
+  json.set! :pagination, nil
 end
