@@ -10,8 +10,9 @@ class Api::V1::UsersController < Api::V1::BaseController
   end
 
   def index
-    @users = User.paginate(page: params[:page])
 
+    @users = User.paginate(page: params[:page])
+    # debugger
     @users.each do |user|
       user.gravatar_url = gravatar_url_for(user, size: 200)
     end
@@ -20,7 +21,15 @@ class Api::V1::UsersController < Api::V1::BaseController
     @envelop[:meta] = { :code => 200 }
     @envelop[:data] = @users
     @envelop[:pagination] = Hash.new
-    @envelop[:pagination][:next_url] = nil
+
+    current_page = params[:page].nil? ? 1 : params[:page].to_i
+
+    # 是否是最后一页
+    if @users.size == User.per_page && current_page * User.per_page < User.count
+      @envelop[:pagination][:next_url] = api_v1_users_url(:page => current_page + 1)
+    else
+      @envelop[:pagination][:next_url] = nil
+    end
   end
 
   def create
