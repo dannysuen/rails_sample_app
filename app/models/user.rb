@@ -1,8 +1,8 @@
 class User < ActiveRecord::Base
-  attr_accessor :remember_token
-  attr_accessor :gravatar_url
+  attr_accessor :remember_token, :activation_token, :gravatar_url
 
-  before_save { self.email = email.downcase }
+  before_save :downcase_email
+  before_create :create_activation_digest
 
   validates :name,  presence: true, length: { maximum: 50 }
 
@@ -52,6 +52,16 @@ class User < ActiveRecord::Base
   def reset_auth_token!
     generate_authentication_token
     save
+  end
+
+  def downcase_email
+    self.email = email.downcase
+  end
+
+  # 创建并赋值激活令牌和摘要
+  def create_activation_digest
+    self.activation_token  = User.new_token
+    self.activation_digest = User.digest(activation_token)
   end
 
 end
