@@ -11,7 +11,7 @@ class Api::V1::UsersController < Api::V1::BaseController
 
   def index
 
-    @users = User.paginate(page: params[:page])
+    @users = User.paginate(page: params[:page], per_page: params[:per_page])
     # debugger
     @users.each do |user|
       user.gravatar_url = gravatar_url_for(user, size: 200)
