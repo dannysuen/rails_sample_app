@@ -1,8 +1,6 @@
 Rails.application.routes.draw do
   get 'password_resets/new'
-
   get 'password_resets/edit'
-
   get 'sessions/new'
 
   root                'static_pages#home'
@@ -15,13 +13,21 @@ Rails.application.routes.draw do
   delete 'logout'  => 'sessions#destroy'
   resources :users
   resources :account_activations, only: [:edit]
-  resources :password_resets, only: [:new, :create, :edit, :update]
+  resources :password_resets,     only: [:new, :create, :edit, :update]
+  resources :microposts,          only: [:create, :destroy]
 
   #api
   namespace :api do
     namespace :v1 do
       resources :users, only: [:show, :new, :create, :index, :update], defaults: { format: 'json' }
+      resources :users do
+        resources :microposts, only: [:index], defaults: { format: 'json' }
+      end
       resources :sessions, only: [:create], defaults: { format: 'json' }
+      resources :microposts, only: [:index], defaults: { format: 'json' }
+      # scope path: 'users/:user_id' do
+      #   resources :microposts, only: [:index], defaults: { format: 'json' }
+      # end
     end
   end
 
